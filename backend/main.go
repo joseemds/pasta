@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"github.com/gorilla/mux"
+
+	"github.com/joseemds/pasta/internal/handlers"
 )
 
 
@@ -21,15 +22,12 @@ func notFound(w http.ResponseWriter, r *http.Request){
 }
 
 func main() {
-	r := mux.NewRouter()
-	r.Use(logging)
+	mux := http.NewServeMux();
+	mux.HandleFunc("/health_check", handlers.HealthCheck)
+	mux.HandleFunc("/noodle", handlers.PostNoodles)
 
-	r.NotFoundHandler = http.HandlerFunc(notFound)
-	r.HandleFunc("/health_check", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "tome")
-	})
+	handler := handlers.Logging(mux)
 
-
-
-	http.ListenAndServe("localhost:8090", r)
+	fmt.Println("Server started at port: 8090")
+	log.Fatal(http.ListenAndServe("localhost:8090", handler))
 }

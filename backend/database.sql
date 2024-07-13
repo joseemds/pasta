@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS noodle (
 	id SERIAL NOT NULL,
 	content TEXT NOT NULL,
 	filename varchar(255) NOT NULL,
+	language varchar(255) NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 	pasta_id SERIAL references pasta(id),

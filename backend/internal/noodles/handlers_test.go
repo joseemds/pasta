@@ -21,7 +21,7 @@ func TestCreateNoodle(t *testing.T){
 		{
 			description: "Create Noodles with EmptyList fails",
 			payload:      []byte(`{"noodles": []}`),
-			expectedCode: 403,
+			expectedCode: 422,
 			errorMessage: "Expected NonEmpty list",
 		},
 	}

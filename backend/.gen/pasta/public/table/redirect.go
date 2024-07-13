@@ -38,8 +38,7 @@ func (a RedirectTable) AS(alias string) *RedirectTable {
 	return newRedirectTable(a.SchemaName(), a.TableName(), alias)
 }
 
-// Schema creates new RedirectTable with assigned schema name
-func (a RedirectTable) FromSchema(schemaName string) *RedirectTable {
+// Schema creates new RedirectTable with assigned schema name func (a RedirectTable) FromSchema(schemaName string) *RedirectTable {
 	return newRedirectTable(schemaName, a.TableName(), a.Alias())
 }
 

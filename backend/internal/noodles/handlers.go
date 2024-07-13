@@ -12,11 +12,11 @@ func RegisterNoodleGroup(app fiber.Router) {
 }
 
 func createNoodle(c fiber.Ctx) error{
-	type Request struct {
+	type RequestBody struct {
 		Noodles []model.Noodle `json:"noodles"`
 	}
 
-	req := new(Request)
+	req := new(RequestBody)
 	if err := c.Bind().JSON(req); err != nil {
 		log.Errorf("Error when parsing json %v", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

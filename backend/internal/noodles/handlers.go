@@ -14,7 +14,6 @@ func Routes(r chi.Router) {
 	r.Post("/", createNoodle)
 }
 
-
 func createNoodle(w http.ResponseWriter, r *http.Request) {
 	log := log.Default()
 	type RequestBody struct {
@@ -26,16 +25,17 @@ func createNoodle(w http.ResponseWriter, r *http.Request) {
 	validate := validator.New()
 	req := new(RequestBody)
 
-	err := json.NewDecoder(r.Body).Decode(&req); if err != nil {
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
 		log.Printf("Error when parsing json %v\n", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if err:= validate.Struct(req); err != nil  {
+	if err := validate.Struct(req); err != nil {
 		errors := err.(validator.ValidationErrors)
 		http.Error(w, errors.Error(), http.StatusUnprocessableEntity)
-		return 
+		return
 	}
 
 	w.WriteHeader(http.StatusCreated)

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"net/http"
 	"go.uber.org/zap"
+	"net/http"
 )
 
 func main() {

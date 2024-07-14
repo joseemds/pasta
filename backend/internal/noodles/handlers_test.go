@@ -10,32 +10,28 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
-func TestCreateNoodle(t *testing.T){
+func TestCreateNoodle(t *testing.T) {
 	testCases := []struct {
-		description string
-		payload []byte
+		description  string
+		payload      []byte
 		errorMessage string
 		expectedCode int
-		}{
+	}{
 		{
-			description: "Create Noodles with EmptyList fails",
+			description:  "Create Noodles with EmptyList fails",
 			payload:      []byte(`{"noodles": []}`),
 			expectedCode: 422,
 			errorMessage: "Expected NonEmpty list",
 		},
 		{
-			description: "Create Single Noodle Succeed",
+			description:  "Create Single Noodle Succeed",
 			payload:      []byte(`{"noodles": []}`),
 			expectedCode: 201,
 			errorMessage: "",
 		},
 	}
-	
 
-
-
-	for _, tc := range testCases{
+	for _, tc := range testCases {
 		t.Run(tc.description, func(t *testing.T) {
 			req := httptest.NewRequest("POST", "/api/noodles", bytes.NewReader(tc.payload))
 			req.Header.Set("Content-Type", "application/json")
@@ -45,10 +41,8 @@ func TestCreateNoodle(t *testing.T){
 
 			router.ServeHTTP(rr, req)
 
-
 			assert.Equalf(t, tc.expectedCode, rr.Code, tc.description)
 		})
 	}
 
 }
-

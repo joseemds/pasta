@@ -7,8 +7,14 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
-	"github.com/joseemds/pasta/.gen/pasta/public/model"
 )
+
+type CreateNoodleRequest struct {
+	Content   string `json:"content"`
+	Filename  string `json:"filename"`
+	Language  string `json:"language"`
+}
+
 
 func Routes(r chi.Router) {
 	r.Post("/", createNoodle)
@@ -16,8 +22,9 @@ func Routes(r chi.Router) {
 
 func createNoodle(w http.ResponseWriter, r *http.Request) {
 	log := log.Default()
+
 	type RequestBody struct {
-		Noodles []model.Noodle `json:"noodles" validate:"min=1"`
+		Noodles []CreateNoodleRequest `json:"noodles" validate:"min=1"`
 	}
 
 	defer r.Body.Close()

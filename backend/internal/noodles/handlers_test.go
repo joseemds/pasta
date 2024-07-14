@@ -2,6 +2,7 @@ package noodles_test
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http/httptest"
 	"testing"
 
@@ -9,6 +10,31 @@ import (
 	"github.com/joseemds/pasta/internal/noodles"
 	"github.com/stretchr/testify/assert"
 )
+
+
+type RequestBody struct {
+	Noodles []noodles.CreateNoodleRequest `json:"noodles" validate:"min=1"`
+}
+
+func generateNoodlesToJSON() []byte{
+    requestBody := RequestBody{
+        Noodles: []noodles.CreateNoodleRequest{
+            {
+                Content:  "console.log('Hello, world!');",
+                Filename: "hello.js",
+                Language: "javascript",
+            },
+            {
+                Content:  "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Hello, world!\")\n}",
+                Filename: "hello.go",
+                Language: "golang",
+            },
+        },
+		}
+
+	content, _ := json.Marshal(requestBody)
+	return content
+}
 
 func TestCreateNoodle(t *testing.T) {
 	testCases := []struct {
@@ -25,7 +51,7 @@ func TestCreateNoodle(t *testing.T) {
 		},
 		{
 			description:  "Create Single Noodle Succeed",
-			payload:      []byte(`{"noodles": []}`),
+			payload:      generateNoodlesToJSON(),
 			expectedCode: 201,
 			errorMessage: "",
 		},

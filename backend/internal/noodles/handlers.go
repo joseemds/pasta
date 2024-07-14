@@ -9,13 +9,6 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type CreateNoodleRequest struct {
-	Content   string `json:"content"`
-	Filename  string `json:"filename"`
-	Language  string `json:"language"`
-}
-
-
 func Routes(r chi.Router) {
 	r.Post("/", createNoodle)
 }
@@ -23,14 +16,10 @@ func Routes(r chi.Router) {
 func createNoodle(w http.ResponseWriter, r *http.Request) {
 	log := log.Default()
 
-	type RequestBody struct {
-		Noodles []CreateNoodleRequest `json:"noodles" validate:"min=1"`
-	}
-
 	defer r.Body.Close()
 
 	validate := validator.New()
-	req := new(RequestBody)
+	req := new(CreateNoodleRequestBody)
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {

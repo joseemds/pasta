@@ -12,13 +12,9 @@ import (
 )
 
 
-type RequestBody struct {
-	Noodles []noodles.CreateNoodleRequest `json:"noodles" validate:"min=1"`
-}
-
 func generateNoodlesToJSON() []byte{
-    requestBody := RequestBody{
-        Noodles: []noodles.CreateNoodleRequest{
+    requestBody := noodles.CreateNoodleRequestBody{
+        Noodles: []noodles.NoodleSchema{
             {
                 Content:  "console.log('Hello, world!');",
                 Filename: "hello.js",

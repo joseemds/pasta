@@ -1,46 +1,42 @@
 package noodles
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
+	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/log"
 	"github.com/joseemds/pasta/.gen/pasta/public/model"
 )
 
-func RegisterNoodleGroup(app fiber.Router) {
-	app.Post("/", createNoodle)
-
+func Routes(r chi.Router) {
+	r.Post("/", createNoodle)
 }
 
-func createNoodle(c fiber.Ctx) error{
+
+func createNoodle(w http.ResponseWriter, r *http.Request) {
+	log := log.Default()
 	type RequestBody struct {
 		Noodles []model.Noodle `json:"noodles" validate:"min=1"`
 	}
 
+	defer r.Body.Close()
 
 	validate := validator.New()
 	req := new(RequestBody)
 
-
-	if err := c.Bind().JSON(req); err != nil {
-		log.Errorf("Error when parsing json %v", err)
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "cannot parse JSON",
-		})
+	err := json.NewDecoder(r.Body).Decode(&req); if err != nil {
+		log.Printf("Error when parsing json %v\n", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
-
 
 	if err:= validate.Struct(req); err != nil  {
-		log.Errorf("Error when validating struct %v", req)
 		errors := err.(validator.ValidationErrors)
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
-			"error": fmt.Sprintf("Validation error: %s", errors),
-		})
-
+		http.Error(w, errors.Error(), http.StatusUnprocessableEntity)
+		return 
 	}
 
-	log.Info("Creating noodle")
-	return c.SendStatus(fiber.StatusCreated)
+	w.WriteHeader(http.StatusCreated)
 }

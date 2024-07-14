@@ -1,22 +1,27 @@
 package main
 
 import (
-	"log"
+	"net/http"
 
-	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/middleware/healthcheck"
-	"github.com/gofiber/fiber/v3/middleware/logger"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joseemds/pasta/internal/noodles"
+	"go.uber.org/zap"
 )
 
 func main() {
-	app := fiber.New()
-	app.Use(logger.New())
-	app.Use(healthcheck.NewHealthChecker())
+	log := zap.Must(zap.NewDevelopment())
 
-	api := app.Group("/api")
-	noodlesGroup := api.Group("/noodles")
+	r := chi.NewRouter()
+  r.Use(middleware.RequestID)
+  r.Use(middleware.RealIP)
+  r.Use(middleware.Logger)
+  r.Use(middleware.Recoverer)
+	r.Use(middleware.Heartbeat("/ping"))
+	r.Route("/api/", func(r chi.Router) {
+		r.Route("/noodles/", noodles.Routes)
+	})
 
-	noodles.RegisterNoodleGroup(noodlesGroup)
-	log.Fatal(app.Listen(":8080"))
+	log.Info("Starting application at port 8080")
+	http.ListenAndServe(":8080", r)
 }

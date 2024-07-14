@@ -15,6 +15,7 @@ type Noodle struct {
 	ID        int32 `sql:"primary_key"`
 	Content   string
 	Filename  string
+	Language  string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	PastaID   int32

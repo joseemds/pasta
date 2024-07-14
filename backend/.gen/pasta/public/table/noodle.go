@@ -20,6 +20,7 @@ type noodleTable struct {
 	ID        postgres.ColumnInteger
 	Content   postgres.ColumnString
 	Filename  postgres.ColumnString
+	Language  postgres.ColumnString
 	CreatedAt postgres.ColumnTimestampz
 	UpdatedAt postgres.ColumnTimestampz
 	PastaID   postgres.ColumnInteger
@@ -66,11 +67,12 @@ func newNoodleTableImpl(schemaName, tableName, alias string) noodleTable {
 		IDColumn        = postgres.IntegerColumn("id")
 		ContentColumn   = postgres.StringColumn("content")
 		FilenameColumn  = postgres.StringColumn("filename")
+		LanguageColumn  = postgres.StringColumn("language")
 		CreatedAtColumn = postgres.TimestampzColumn("created_at")
 		UpdatedAtColumn = postgres.TimestampzColumn("updated_at")
 		PastaIDColumn   = postgres.IntegerColumn("pasta_id")
-		allColumns      = postgres.ColumnList{IDColumn, ContentColumn, FilenameColumn, CreatedAtColumn, UpdatedAtColumn, PastaIDColumn}
-		mutableColumns  = postgres.ColumnList{ContentColumn, FilenameColumn, CreatedAtColumn, UpdatedAtColumn, PastaIDColumn}
+		allColumns      = postgres.ColumnList{IDColumn, ContentColumn, FilenameColumn, LanguageColumn, CreatedAtColumn, UpdatedAtColumn, PastaIDColumn}
+		mutableColumns  = postgres.ColumnList{ContentColumn, FilenameColumn, LanguageColumn, CreatedAtColumn, UpdatedAtColumn, PastaIDColumn}
 	)
 
 	return noodleTable{
@@ -80,6 +82,7 @@ func newNoodleTableImpl(schemaName, tableName, alias string) noodleTable {
 		ID:        IDColumn,
 		Content:   ContentColumn,
 		Filename:  FilenameColumn,
+		Language:  LanguageColumn,
 		CreatedAt: CreatedAtColumn,
 		UpdatedAt: UpdatedAtColumn,
 		PastaID:   PastaIDColumn,

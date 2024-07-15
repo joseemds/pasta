@@ -1,6 +1,8 @@
 package main
 
 import (
+	"database/sql"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joseemds/pasta/internal/noodles"
@@ -9,13 +11,15 @@ import (
 
 type App struct {
 	Router *chi.Mux
-	Logger *zap.Logger
+	Logger *zap.SugaredLogger
+	DBConnection *sql.DB
 }
 
-func NewApp(logger *zap.Logger) *App {
+func NewApp(logger *zap.SugaredLogger, conn *sql.DB) *App {
 	app := &App{
 		Router: chi.NewRouter(),
 		Logger: logger,
+		DBConnection: conn,
 	}
 
 	app.setupRoutes()
@@ -32,7 +36,8 @@ func (app *App) setupRoutes() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Heartbeat("/ping"))
 	r.Route("/api/", func(r chi.Router) {
-		r.Route("/noodles/", noodles.Routes)
+		noodleHandler := noodles.NewHandler(app.Logger, app.DBConnection)
+		r.Route("/noodles/", noodleHandler.Routes)
 	})
 
 }

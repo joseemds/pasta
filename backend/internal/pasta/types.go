@@ -3,9 +3,12 @@ package pasta
 import "github.com/joseemds/pasta/internal/noodles"
 
 type PastaSchema struct {
-	Noodles []noodles.NoodleSchema
+	Title string `json:"title"`
+	Description string `json:"description"`
 }
 
-type CreatePastaRequest struct {
-	Noodles []PastaSchema `json:"noodles" validate:"min=1"`
+type CreatePastaRequestBody struct {
+	Title string `json:"title"`
+	Description string `json:"description"`
+	Noodles []noodles.NoodleSchema `json:"noodles" validate:"min=1"`
 }

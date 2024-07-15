@@ -18,5 +18,5 @@ type Noodle struct {
 	Language  string
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	PastaID   int32
+	PastaID   *int32
 }

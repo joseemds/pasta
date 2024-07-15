@@ -17,5 +17,5 @@ type Pasta struct {
 	Description *string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	AccountID   int32
+	AccountID   *int32
 }

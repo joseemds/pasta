@@ -16,5 +16,5 @@ type Redirect struct {
 	URL       *string
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	PastaID   int32
+	PastaID   *int32
 }

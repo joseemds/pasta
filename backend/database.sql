@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS pasta (
 	description TEXT,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-	account_id SERIAL references account(id),
+	account_id INT references account(id),
 	PRIMARY KEY(id)
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS noodle (
 	language varchar(255) NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-	pasta_id SERIAL references pasta(id),
+	pasta_id INT references pasta(id),
 	PRIMARY KEY(id)
 );
 
@@ -33,6 +33,6 @@ CREATE TABLE IF NOT EXISTS redirect (
 	url VARCHAR,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-	pasta_id SERIAL references pasta(id),
+	pasta_id INT references pasta(id),
 	PRIMARY KEY(id)
 );

@@ -39,8 +39,8 @@ func (app *App) setupRoutes() {
 	r.Route("/api/", func(r chi.Router) {
 		noodleHandler := noodles.NewHandler(app.Logger, app.DBConnection)
 		pastaHandler := pasta.NewHandler(app.Logger, app.DBConnection)
-		r.Route("/noodles/", noodleHandler.Routes)
-		r.Route("/pasta/", pastaHandler.Routes)
+		r.Route("/noodles", noodleHandler.Routes)
+		r.Route("/pasta", pastaHandler.Routes)
 	})
 
 }

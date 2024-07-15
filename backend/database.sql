@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS noodle (
 	language varchar(255) NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-	pasta_id INT references pasta(id),
+	pasta_id INT references pasta(id) ON DELETE CASCADE,
 	PRIMARY KEY(id)
 );
 

@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joseemds/pasta/internal/noodles"
+	"github.com/joseemds/pasta/internal/pasta"
 	"go.uber.org/zap"
 )
 
@@ -37,7 +38,9 @@ func (app *App) setupRoutes() {
 	r.Use(middleware.Heartbeat("/ping"))
 	r.Route("/api/", func(r chi.Router) {
 		noodleHandler := noodles.NewHandler(app.Logger, app.DBConnection)
+		pastaHandler := pasta.NewHandler(app.Logger, app.DBConnection)
 		r.Route("/noodles/", noodleHandler.Routes)
+		r.Route("/pasta/", pastaHandler.Routes)
 	})
 
 }

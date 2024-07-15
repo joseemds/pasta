@@ -2,7 +2,7 @@ package pasta
 
 import (
 	"database/sql"
-
+	"fmt"
 
 	"github.com/joseemds/pasta/.gen/pasta/public/model"
 	. "github.com/joseemds/pasta/.gen/pasta/public/table"
@@ -27,6 +27,7 @@ func NewService(logger *zap.SugaredLogger, db *sql.DB) PastaService {
 
 
 func (s PastaService) CreatePasta(body CreatePastaRequestBody)  (error){
+	fmt.Printf("%+v\n", body)
 	pasta := model.Pasta {
 		Title: &body.Title,
 		Description: &body.Description,
@@ -34,18 +35,14 @@ func (s PastaService) CreatePasta(body CreatePastaRequestBody)  (error){
 
 	insertStmt := Pasta.INSERT(Pasta.Description, Pasta.Title).MODEL(pasta).RETURNING(Pasta.ID)
 
-	res, err := insertStmt.Exec(s.DBConn)
+	createdPasta := model.Pasta{}
+
+	err := insertStmt.Query(s.DBConn, &createdPasta)
 
 	if err != nil {
-		s.Logger.Errorf("Failed to inser pasta, DBError: %w", err.Error())
+		s.Logger.Errorf("Failed to insert pasta, DBError: %w", err)
 		return err
 	}
 
-	pastaId, err := res.LastInsertId()
-
-	if err != nil{
-		s.Logger.Errorf("Failed to get id from created pasta, DBError: %w", err.Error())
-	}
-
-	return s.NoodleService.CreateNoodles(body.Noodles, int32(pastaId))
+	return s.NoodleService.CreateNoodles(body.Noodles, &createdPasta.ID)
 }

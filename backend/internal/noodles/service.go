@@ -21,7 +21,7 @@ func NewService( logger *zap.SugaredLogger, db *sql.DB) NoodleService{
 	}
 }
 
-func (s NoodleService) CreateNoodle(schema NoodleSchema, pastaId int32) (sql.Result, error){
+func (s NoodleService) CreateNoodle(schema NoodleSchema, pastaId *int32) (sql.Result, error){
 	noodle := model.Noodle {
 		PastaID: pastaId,
 		Content: schema.Content,
@@ -33,14 +33,14 @@ func (s NoodleService) CreateNoodle(schema NoodleSchema, pastaId int32) (sql.Res
 
 	res, err := insertStmt.Exec(s.DBConn)
 	if err != nil {
-		s.Logger.Errorf("Failed to insert noodle, DBError: %w", err.Error())
+		s.Logger.Errorf("Failed to insert noodle, DBError: %w", err)
 		return nil, err
 	}
 
 	return res, nil
 }
 
-func (s NoodleService) CreateNoodles(schemas []NoodleSchema, pastaId int32) error {
+func (s NoodleService) CreateNoodles(schemas []NoodleSchema, pastaId *int32) error {
 	for _, schema := range schemas {
 		if _, err := s.CreateNoodle(schema, pastaId); err != nil {
 			return err

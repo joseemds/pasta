@@ -8,4 +8,4 @@ type NoodleSchema struct {
 
 type CreateNoodleRequestBody struct {
 		Noodles []NoodleSchema `json:"noodles" validate:"min=1"`
-	}
+}

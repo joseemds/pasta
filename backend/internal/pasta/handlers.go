@@ -19,9 +19,11 @@ type PastaHandler struct {
 
 
 func NewHandler(logger *zap.SugaredLogger, conn *sql.DB) PastaHandler {
+	service := NewService(logger, conn)
 	return PastaHandler{
 		Conn: conn,
 		Logger: logger,
+		Service: &service,
 	}
 }
 
@@ -32,15 +34,12 @@ func (h PastaHandler) Routes(r chi.Router){
 
 func (h PastaHandler) createPasta(w http.ResponseWriter, r *http.Request){
 	log := h.Logger
-
-	defer r.Body.Close()
-	defer h.Logger.Sync()
 	validate := validator.New()
 	reqBody := new(CreatePastaRequestBody)
 	err := json.NewDecoder(r.Body).Decode(&reqBody)
 
 	if err != nil {
-		log.Errorf("Error when parsing json to create pasta %w", err.Error())
+		log.Errorf("Error when parsing json to create pasta %w", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -51,9 +50,11 @@ func (h PastaHandler) createPasta(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-if err := h.Service.CreatePasta(*reqBody); err != nil{
+	createPastaErr := h.Service.CreatePasta(*reqBody)
+
+	if createPastaErr != nil{
 		http.Error(w, "Something went wrong", http.StatusInternalServerError)
-		h.Logger.Errorf("Error creating noodle %w", err.Error())
+		h.Logger.Errorf("Error creating noodle %w", err)
 		return
 	}
 
